@@ -7,16 +7,14 @@ package com.mycompany.pokemonraros2;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -27,14 +25,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Main extends javax.swing.JFrame {
 
-    DefaultTableModel defaultTable;
-    Conexiones conexiones = new Conexiones();
-    ArrayList<Pokemon> cercanos = new ArrayList<>();
-    ArrayList<Pokemon> listaPokemon = new ArrayList<>();
-    ArrayList<Pokemon> cercanosTemp = new ArrayList<>();
-    double lat;
-    double lon;
-    NotificationPopup pop = new NotificationPopup();
+    private DefaultTableModel defaultTable;
+    private Conexiones conexiones = new Conexiones();
+    private ArrayList<Pokemon> cercanos = new ArrayList<>();
+    private ArrayList<Pokemon> listaPokemon = new ArrayList<>();
+    private ArrayList<Pokemon> cercanosTemp = new ArrayList<>();
+    private double lat;
+    private double lon;
+    private NotificationPopup pop = new NotificationPopup();
 
     public Main() {
         initComponents();
@@ -204,9 +202,13 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.lat = Double.parseDouble(jTextField1.getText());
-        this.lon = Double.parseDouble(jTextField2.getText());
-        coordenadas.setText(lat + ", " + lon);
+        try {
+            this.lat = Double.parseDouble(jTextField1.getText());
+            this.lon = Double.parseDouble(jTextField2.getText());
+            coordenadas.setText(lat + ", " + lon);
+        } catch (NumberFormatException e) {
+            coordenadas.setText(this.lat + ", " + this.lon);
+        }
 
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -274,7 +276,7 @@ public class Main extends javax.swing.JFrame {
 
     }.start();
     //pop.popup(p.getName() + " " + p.getLat() + ", " + p.getLon(), p.getIco());
-    ////System.out.println("Adding: " + p);
+    //System.out.println("Adding: " + p);
     }
     addPokemon(p, jTable1);
     }
@@ -284,9 +286,9 @@ public class Main extends javax.swing.JFrame {
     }
     for (Pokemon p : cercanos) {
     if (caducado(p)) {
-    ////System.out.println(p + " Esta caducado");
+    //System.out.println(p + " Esta caducado");
     eliminar(p);
-    ////System.out.println("Eliminado");
+    //System.out.println("Eliminado");
     } else {
     //System.out.println(p + " No caducado");
     }
@@ -328,17 +330,17 @@ public class Main extends javax.swing.JFrame {
                 }
             }
 
-            ArrayList<Pokemon> eliminara = new ArrayList<>();
+            ArrayList<Pokemon> eliminarA = new ArrayList<>();
 
             for (Pokemon p : listaPokemon) {
                 if (!caducado(p)) {
                     actualizarHora(p, jTable1);
                 } else {
                     System.out.println(p.getName() + " caducado");
-                    eliminara.add(p);
+                    eliminarA.add(p);
                 }
             }
-            for (Pokemon p : eliminara) {
+            for (Pokemon p : eliminarA) {
                 if (listaPokemon.remove(p)) {
                     eliminar(p, jTable1);
                     System.out.println("Eliminando " + p.getName());
@@ -365,18 +367,18 @@ public class Main extends javax.swing.JFrame {
                 }
             }
 
-            ArrayList<Pokemon> eliminarb = new ArrayList<>();
+            ArrayList<Pokemon> eliminarB = new ArrayList<>();
 
             for (Pokemon p : cercanos) {
                 if (!caducado(p)) {
                     actualizarHora(p, jTable2);
                 } else {
                     System.out.println(p.getName() + " caducado");
-                    eliminarb.add(p);
+                    eliminarB.add(p);
                 }
             }
 
-            for (Pokemon p : eliminarb) {
+            for (Pokemon p : eliminarB) {
                 if (cercanos.remove(p)) {
                     eliminar(p, jTable2);
                     System.out.println("Eliminando " + p.getName());
@@ -384,25 +386,36 @@ public class Main extends javax.swing.JFrame {
                 }
             }
 
+            if (coordenadas.getText().contains("No")) {
+                coordenadas.setText("Conexion reestablecida");
+            }
+
+        } catch (SocketTimeoutException ej) {
+            System.out.println("No hay intenet");
+            coordenadas.setText("No hay conexion a internet");
+
+        } catch (UnknownHostException e) {
+
+            coordenadas.setText("No hay conexion a internet");
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("error");
+
+            System.out.println("error 1");
         } catch (ParseException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("error");
+
+            System.out.println("error 2");
         } catch (RuntimeException e) {
             System.out.println("error " + e.getMessage() + e.getClass().getName());
             //throw (e);
         } catch (Exception e) {
-            System.out.println("Error");
+            System.out.println("error " + e.getMessage() + e.getClass().getName());
         }
 
     }
 
     public boolean caducado(Pokemon pokemon) {
         Date actual = new Date();
-        SimpleDateFormat sdfAmerica = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a");
-        sdfAmerica.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+        //SimpleDateFormat sdfAmerica = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a");
+        //sdfAmerica.setTimeZone(TimeZone.getTimeZone("America/New_York"));
 
         if (actual.getTime() - pokemon.getRestante().getTime() > 0) {
 
@@ -459,7 +472,7 @@ public class Main extends javax.swing.JFrame {
     @Deprecated
     public void eliminar(Pokemon p) {
         cercanosTemp.remove(p);
-        ////System.out.println("Se pudo eliminar");
+        //System.out.println("Se pudo eliminar");
 
         DefaultTableModel d = new DefaultTableModel(new String[]{"Nombre", "Tiempo Restante", "Coordenadas"}, 0);
         jTable2.setModel(d);
@@ -468,7 +481,7 @@ public class Main extends javax.swing.JFrame {
             addPokemon(ac, jTable2);
         }
 
-        ////System.out.println("Terminado de eliminar");
+        //System.out.println("Terminado de eliminar");
     }
 
     public void eliminar(Pokemon p, JTable j) {
@@ -483,7 +496,7 @@ public class Main extends javax.swing.JFrame {
             }
         }
 
-        ////System.out.println("Terminado de eliminar");
+        //System.out.println("Terminado de eliminar");
     }
 
     public void actualizarHora(Pokemon pokemon) {
@@ -495,7 +508,7 @@ public class Main extends javax.swing.JFrame {
         for (i = 0; i < cercanosTemp.size(); i++) {
             //System.out.println(d.getValueAt(i, 2).toString());
             if (d.getValueAt(i, 2).toString().contains(pokemon.getLat() + "")) {
-                ////System.out.println("Encontado en " + i);
+                //System.out.println("Encontado en " + i);
                 break;
             }
         }
