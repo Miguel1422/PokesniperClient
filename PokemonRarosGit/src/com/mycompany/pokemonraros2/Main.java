@@ -514,7 +514,7 @@ public class Main extends javax.swing.JFrame {
         }
         d.setValueAt(pokemon.getName(), i, 0);
         d.setValueAt(res, i, 1);
-        //d.setValueAt(pokemon.g, i, 2);
+        
     }
 
     public void actualizarHora(Pokemon pokemon, JTable j) {
