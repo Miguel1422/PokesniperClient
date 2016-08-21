@@ -21,7 +21,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
@@ -31,7 +31,7 @@ class NotificationPopup implements MouseListener {
 
     public static void main(String[] args) throws MalformedURLException, IOException {
         NotificationPopup p = new NotificationPopup();
-        p.popup("Porygon 43.764309, -79.458478 12:23", "https://s3-eu-west-1.amazonaws.com/pokesnipers/blackwhite/9.png", true,true);
+        p.popup("Porygon 43.764309, -79.458478 12:23", "https://s3-eu-west-1.amazonaws.com/pokesnipers/blackwhite/9.png", true, true);
 
     }
 
@@ -43,8 +43,9 @@ class NotificationPopup implements MouseListener {
         //String message = "You got a new notification message. Isn't it awesome to have such a notification message.";
         //String header = "Nuevo pokemon raro";
         String header = message;
-        JFrame frame = new JFrame();
+        //JFrame frame = new JFrame();
 
+        JDialog frame = new JDialog();
         if (!maps) {
             frame.setTitle(message);
         } else {
@@ -101,7 +102,7 @@ class NotificationPopup implements MouseListener {
         constraints.fill = GridBagConstraints.BOTH;
         JLabel messageLabel = new JLabel("<HtMl>" + message);
         //frame.add(messageLabel, constraints);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();// size of the screen
         Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(frame.getGraphicsConfiguration());// height of the task bar
@@ -143,7 +144,8 @@ class NotificationPopup implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        JFrame j = (JFrame) e.getSource();
+        //JFrame j = (JFrame) e.getSource();
+        JDialog j = (JDialog) e.getSource();
         String a = j.getTitle();
         String tokens[] = a.split(" ");
         String coords = tokens[1] + " " + tokens[2];

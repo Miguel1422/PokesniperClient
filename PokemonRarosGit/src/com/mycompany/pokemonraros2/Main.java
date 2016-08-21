@@ -5,6 +5,8 @@
  */
 package com.mycompany.pokemonraros2;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -57,6 +59,8 @@ public class Main extends javax.swing.JFrame {
         this.lat = 0;
         this.lon = 0;
         this.setLocationRelativeTo(null);
+        Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/icon2.png"));
+        setIconImage(icon);
 
     }
 
