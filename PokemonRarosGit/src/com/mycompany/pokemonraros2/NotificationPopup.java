@@ -1,5 +1,7 @@
 package com.mycompany.pokemonraros2;
 
+import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -29,17 +31,25 @@ class NotificationPopup implements MouseListener {
 
     public static void main(String[] args) throws MalformedURLException, IOException {
         NotificationPopup p = new NotificationPopup();
-        p.popup("Porygon 43.764309, -79.458478 12:23", "https://s3-eu-west-1.amazonaws.com/pokesnipers/blackwhite/9.png", true);
+        p.popup("Porygon 43.764309, -79.458478 12:23", "https://s3-eu-west-1.amazonaws.com/pokesnipers/blackwhite/9.png", true,true);
 
     }
 
     public synchronized void popup(String message, String icon, boolean sound) throws MalformedURLException {
+        popup(message, icon, sound, false);
+    }
+
+    public synchronized void popup(String message, String icon, boolean sound, boolean maps) throws MalformedURLException {
         //String message = "You got a new notification message. Isn't it awesome to have such a notification message.";
         //String header = "Nuevo pokemon raro";
         String header = message;
         JFrame frame = new JFrame();
 
-        frame.setTitle(message);
+        if (!maps) {
+            frame.setTitle(message);
+        } else {
+            frame.setTitle(message + " maps");
+        }
 
         frame.addMouseListener(this);
 
@@ -133,15 +143,22 @@ class NotificationPopup implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
         JFrame j = (JFrame) e.getSource();
-
         String a = j.getTitle();
         String tokens[] = a.split(" ");
-
         String coords = tokens[1] + " " + tokens[2];
+        if (!a.contains("maps")) {
+            setClipboard(coords);
+        } else {
+            setClipboard(coords);
+            try {
+                Desktop.getDesktop().browse(new URL("https://www.google.com.mx/maps/place/" + coords.replace(" ", "") + "/").toURI());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
 
-        setClipboard(coords);
+        j.getContentPane().setBackground(Color.gray);
     }
 
     public void setClipboard(String str) {
