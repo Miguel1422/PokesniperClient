@@ -80,6 +80,7 @@ public class Main extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jCheckBox1 = new javax.swing.JCheckBox();
         coordenadas = new javax.swing.JLabel();
+        jCheckBox2 = new javax.swing.JCheckBox();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
 
@@ -114,6 +115,8 @@ public class Main extends javax.swing.JFrame {
 
         jCheckBox1.setText("Sonido");
 
+        jCheckBox2.setText("Abrir en Google Maps");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -125,7 +128,10 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jCheckBox1)
+                                .addGap(18, 18, 18)
+                                .addComponent(jCheckBox2))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -155,7 +161,9 @@ public class Main extends javax.swing.JFrame {
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCheckBox1)
+                    .addComponent(jCheckBox2))
                 .addContainerGap(85, Short.MAX_VALUE))
         );
 
@@ -292,7 +300,9 @@ public class Main extends javax.swing.JFrame {
                         @Override
                         public void run() {
                             try {
-                                pop.popup(p.getName() + " " + p.getLat() + ", " + p.getLon() + " -" + getRestante(p.getRestante()) + "-", p.getIco(), jCheckBox1.isSelected());
+                                pop.popup(p.getName() + " " + p.getLat() + ", " + p.getLon()
+                                        + " -" + getRestante(p.getRestante()) + "-",
+                                        p.getIco(), jCheckBox1.isSelected(), jCheckBox2.isSelected());
                             } catch (MalformedURLException ex) {
                                 System.out.println("Error");
                             }
@@ -474,6 +484,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel coordenadas;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
